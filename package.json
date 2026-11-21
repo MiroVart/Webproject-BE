@@ -1,0 +1,34 @@
+{
+  "name": "restaurantbe",
+  "version": "1.0.0",
+  "description": "Backend of the restaurant project",
+  "keywords": [
+    "restbe"
+  ],
+  "homepage": "https://github.com/MiroVart/Webproject-BE#readme",
+  "bugs": {
+    "url": "https://github.com/MiroVart/Webproject-BE/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MiroVart/Webproject-BE.git"
+  },
+  "license": "ISC",
+  "author": "waltteri",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "testIndex",
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "express": "^5.3.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.15.0",
+    "globals": "^17.14.0",
+    "nodemon": "^3.1.14"
+  }
+}
