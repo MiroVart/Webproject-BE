@@ -23,7 +23,7 @@ const postLogin = async (req, res) => {
     username: user.username,
     email: user.email,
     role: user.role,
-    bonuscardUses: user.bonuscard_uses,
+    bonuscard_uses: user.bonuscard_uses,
   };
 
   const token = jwt.sign(userWithNoPassword, process.env.JWT_SECRET, {

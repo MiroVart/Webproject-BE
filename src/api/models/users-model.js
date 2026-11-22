@@ -31,10 +31,10 @@ const findUserByUsername = async (username) => {
 };
 
 const addUser = async (user) => {
-  const {name, username, email, password, role, bonusCardUses} = user;
+  const {name, username, email, password, role, bonuscard_uses} = user;
   const sql = `INSERT INTO wsk_users (name, username, email, password, role, bonuscard_uses)
-               VALUES (?, ?, ?, ?, ?)`;
-  const params = [name, username, email, password, role, bonusCardUses];
+               VALUES (?, ?, ?, ?, ?, ?)`;
+  const params = [name, username, email, password, role, bonuscard_uses];
   const [result] = await promisePool.execute(sql, params);
   console.log('insert query result', result);
   if (result.affectedRows === 0) {

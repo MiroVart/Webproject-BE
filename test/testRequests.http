@@ -1,0 +1,54 @@
+@apiUrl = http://127.0.0.1:3000/api/v1
+
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJuYW1lIjoid2FsdHRlcmkiLCJ1c2VybmFtZSI6IndhbGRlbWFydDIyIiwiZW1haWwiOiJ3YWxkZW1hcnRAZW1haWwuY29tIiwicm9sZSI6InVzZXIiLCJib251c2NhcmRfdXNlcyI6MCwiaWF0IjoxNzk1MzQzMTY5LCJleHAiOjE3OTU0Mjk1Njl9.NJLeceOBTeUeKwkIw8kMzyTVvUBtnX6VlujNXxjN8yo
+
+### Get users
+GET {{apiUrl}}/users
+
+### Get user by id
+GET {{apiUrl}}/users/2
+
+### Login user
+# @name login
+POST {{apiUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "username": "waldemart22",
+    "password": "pswrd123"
+}
+
+### Get user info
+GET {{apiUrl}}/auth/me
+Authorization: Bearer {{login.response.body.token}}
+
+### Post new user
+POST {{apiUrl}}/users
+Content-Type: application/json
+
+{
+    "name": "testuser",
+    "username": "test",
+    "email": "test@email.com",
+    "password": "testpswrd",
+    "role": "user",
+    "bonuscard_uses": 0
+}
+
+### Edit user
+PUT {{apiUrl}}/users/4
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+    "name": "waltteri",
+    "username": "waldemart22",
+    "email": "waldemart@email.com",
+    "password": "pswrd123",
+    "role": "admin",
+    "bonuscard_uses": 0
+}
+
+### Delete user
+DELETE {{apiUrl}}/users/5
+Authorization: Bearer {{login.response.body.token}}

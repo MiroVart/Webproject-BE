@@ -31,6 +31,9 @@ userRouter
       .isLength({min: 8, max: 20})
       .withMessage('Password must be min 8 and max 20 characters long'),
     body('role').isAlpha().withMessage('Role must be in alphabet format'),
+    body('bonuscard_uses')
+      .isNumeric()
+      .withMessage('Bonus card uses must be a numeric value'),
     validationErrors,
     postUser
   );
@@ -55,6 +58,9 @@ userRouter
       .isLength({min: 8, max: 20})
       .withMessage('Password must be min 8 and max 20 characters long'),
     body('role').isAlpha().withMessage('Role must be in alphabet format'),
+    body('bonuscard_uses')
+      .isNumeric()
+      .withMessage('Bonus card uses must be a numeric value'),
     validationErrors,
     putUser
   );
