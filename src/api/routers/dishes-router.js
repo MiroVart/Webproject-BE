@@ -16,18 +16,16 @@ dishesRouter
   .route('/')
   .get(getAllDishes)
   .post(
-    authenticateToken,
+    /*authenticateToken,*/
     body('dish_name_en')
-      .isAlpha()
       .isLength({min: 5, max: 100})
       .withMessage('Dish name (en) must be min 5 and max 100 characters long'),
     body('dish_name_fi')
-      .isAlpha()
       .isLength({min: 5, max: 100})
       .withMessage('Dish name (fi) must be min 5 and max 100 characters long'),
     body('type')
       .isAlpha()
-      .isLength({min: 5, max: 50})
+      .isLength({min: 3, max: 50})
       .withMessage('Type must be min 5 and max 50 characters long'),
     body('weekday')
       .isAlpha()
@@ -45,19 +43,15 @@ dishesRouter
     body('protein').isNumeric().withMessage('Protein must be a numeric value'),
     body('fiber').isNumeric().withMessage('Fiber must be a numeric value'),
     body('allergens_en')
-      .isAlpha()
       .isLength({max: 100})
       .withMessage('Allergens (en) must be max 100 characters long'),
     body('allergens_fi')
-      .isAlpha()
       .isLength({max: 100})
       .withMessage('Allergens (fi) must be max 100 characters long'),
     body('description_en')
-      .isAlpha()
       .isLength({max: 200})
       .withMessage('Description (en) must be max 100 characters long'),
     body('description_fi')
-      .isAlpha()
       .isLength({max: 200})
       .withMessage('Description (fi) must be max 100 characters long'),
     body('filename'),
@@ -71,16 +65,14 @@ dishesRouter
   .put(
     authenticateToken,
     body('dish_name_en')
-      .isAlpha()
       .isLength({min: 5, max: 100})
       .withMessage('Dish name (en) must be min 5 and max 100 characters long'),
     body('dish_name_fi')
-      .isAlpha()
       .isLength({min: 5, max: 100})
       .withMessage('Dish name (fi) must be min 5 and max 100 characters long'),
     body('type')
       .isAlpha()
-      .isLength({min: 5, max: 50})
+      .isLength({min: 3, max: 50})
       .withMessage('Type must be min 5 and max 50 characters long'),
     body('weekday')
       .isAlpha()
@@ -98,19 +90,15 @@ dishesRouter
     body('protein').isNumeric().withMessage('Protein must be a numeric value'),
     body('fiber').isNumeric().withMessage('Fiber must be a numeric value'),
     body('allergens_en')
-      .isAlpha()
       .isLength({max: 100})
       .withMessage('Allergens (en) must be max 100 characters long'),
     body('allergens_fi')
-      .isAlpha()
       .isLength({max: 100})
       .withMessage('Allergens (fi) must be max 100 characters long'),
     body('description_en')
-      .isAlpha()
       .isLength({max: 200})
       .withMessage('Description (en) must be max 100 characters long'),
     body('description_fi')
-      .isAlpha()
       .isLength({max: 200})
       .withMessage('Description (fi) must be max 100 characters long'),
     body('filename'),

@@ -51,10 +51,10 @@ const addDish = async (dish) => {
     saturated_fat,
     protein,
     fiber,
-    allergens_en,
-    allergens_fi,
-    description_en,
-    description_fi,
+    allergens_en ?? '-',
+    allergens_fi ?? '-',
+    description_en ?? '-',
+    description_fi ?? '-',
     filename,
   ];
   const [result] = await promisePool.execute(sql, params);
