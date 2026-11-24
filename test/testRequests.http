@@ -29,10 +29,10 @@ Content-Type: application/json
 {
     "name": "testuser",
     "username": "test",
-    "email": "test@email.com",
+    "email": "testemail.com",
     "password": "testpswrd",
-    "role": "user",
-    "bonuscard_uses": 0
+    "role": 0,
+    "bonuscard_uses": "moi"
 }
 
 ### Edit user
@@ -45,7 +45,7 @@ Authorization: Bearer {{login.response.body.token}}
     "username": "walde22",
     "email": "walde@email.com",
     "password": "pswrd12345",
-    "role": "user",
+    "role": 3,
     "bonuscard_uses": 0
 }
 
@@ -62,6 +62,7 @@ GET {{apiUrl}}/dishes/3
 ### Post new dish
 POST {{apiUrl}}/dishes
 Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
 
 {
     "dish_name_en": "Porkchop with potatoes",
@@ -69,32 +70,32 @@ Content-Type: application/json
     "type": "main",
     "weekday": "wed",
     "price": 6.99,
-    "calories": 500,
+    "calories": "Moi",
     "carbs": 50,
     "fat": 10,
-    "saturated_fat": 10,
+    "saturated_fat": "hei",
     "protein": 10,
     "fiber": 10,
-    "allergens_en": "",
+    "allergens_en": 0,
     "allergens_fi": "",
     "description_en": "",
     "description_fi": "",
-    "filename": "file"
+    "filename": ""
 }
 
 ### Edit dish
-PUT {{apiUrl}}/dishes/8
+PUT {{apiUrl}}/dishes/10
 Content-Type: application/json
 Authorization: Bearer {{login.response.body.token}}
 
 {
     "dish_name_en": "Porkchop with potatoes",
     "dish_name_fi": "Porsaankyljys perunoilla",
-    "type": "main",
+    "type": 0,
     "weekday": "fri",
     "price": 6.99,
     "calories": 500,
-    "carbs": 50,
+    "carbs": "moikka",
     "fat": 10,
     "saturated_fat": 10,
     "protein": 10,
@@ -103,7 +104,7 @@ Authorization: Bearer {{login.response.body.token}}
 }
 
 ### Delete dish
-DELETE {{apiUrl}}/dishes/9
+DELETE {{apiUrl}}/dishes/13
 Authorization: Bearer {{login.response.body.token}}
 
 ### Get orders
@@ -126,14 +127,14 @@ Content-Type: application/json
   "dish_3": 0,
   "dish_3_amount": 0,
   "dish_4": 0,
-  "dish_4_amount": 0,
+  "dish_4_amount": "moi",
   "dish_5": 0,
   "dish_5_amount": 0,
   "dish_6": 0,
   "dish_6_amount": 0,
   "dish_7": 0,
   "dish_7_amount": 0,
-  "dish_8": 0,
+  "dish_8": "heippa",
   "dish_8_amount": 0,
   "dish_9": 0,
   "dish_9_amount": 0,
@@ -151,14 +152,14 @@ Authorization: Bearer {{login.response.body.token}}
 
 {
   "customer_id": 4,
-  "order_date": "2026-11-23",
+  "order_date": "",
   "dish_1": 1,
-  "dish_1_amount": 2,
+  "dish_1_amount": "hei",
   "dish_2": 2,
   "dish_2_amount": 3,
   "dish_3": 3,
   "dish_3_amount": 1,
-  "price": 21.99,
+  "price": "moi",
   "finished": 1,
   "pickedup": 1
 }

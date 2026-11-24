@@ -95,7 +95,7 @@ const addOrder = async (order /*, customer_id*/) => {
     dish_9_amount ?? 0,
     dish_10 ?? null,
     dish_10_amount ?? 0,
-    price ?? 0,
+    price,
     finished ?? 0,
     pickedup ?? 0,
   ];
