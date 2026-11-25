@@ -18,10 +18,10 @@ const findOrderById = async (id) => {
   return rows[0];
 };
 
-const addOrder = async (order /*, customer_id*/) => {
+const addOrder = async (order, customer) => {
   const {
     //Väliaikainen ratkaisu id:n sijoitukselle
-    customer_id,
+    //customer_id,
     order_date,
     dish_1,
     dish_1_amount,
@@ -73,7 +73,7 @@ const addOrder = async (order /*, customer_id*/) => {
     pickedup)
                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
   const params = [
-    customer_id,
+    customer.user_id,
     order_date ?? new Date(),
     dish_1,
     dish_1_amount ?? 1,
@@ -104,14 +104,25 @@ const addOrder = async (order /*, customer_id*/) => {
   if (result.affectedRows === 0) {
     return false;
   }
-  return {order_id: result.insertId /*customer_id: customer*/};
+  return {order_id: result.insertId, customer_id: customer.user_id};
 };
 
-const modifyOrder = async (id, order) => {
-  const sql = promisePool.format(`UPDATE wsk_orders SET ? WHERE order_id = ?`, [
-    order,
-    id,
-  ]);
+const modifyOrder = async (id, order, loggedUser) => {
+  let column;
+  let dataId;
+  if (loggedUser.role === 'admin') {
+    dataId = id;
+    column = 'order_id';
+  } else if (loggedUser.role === 'user') {
+    dataId = loggedUser.user_id;
+    column = 'customer_id';
+  } else {
+    return false;
+  }
+  const sql = promisePool.format(
+    `UPDATE wsk_orders SET ? WHERE ${column} = ?`,
+    [order, dataId]
+  );
   const rows = await promisePool.execute(sql);
   console.log('rows', rows);
   if (rows[0].affectedRows === 0) {
@@ -120,10 +131,21 @@ const modifyOrder = async (id, order) => {
   return true;
 };
 
-const removeOrder = async (id) => {
+const removeOrder = async (id, loggedUser) => {
+  let column;
+  let dataId;
+  if (loggedUser.role === 'admin') {
+    dataId = id;
+    column = 'order_id';
+  } else if (loggedUser.role === 'user') {
+    dataId = loggedUser.user_id;
+    column = 'customer_id';
+  } else {
+    return false;
+  }
   const [rows] = await promisePool.execute(
-    'DELETE FROM wsk_orders WHERE order_id = ?',
-    [id]
+    `DELETE FROM wsk_orders WHERE ${column} = ?`,
+    [dataId]
   );
   console.log('rows', rows);
   if (rows.affectedRows === 0) {

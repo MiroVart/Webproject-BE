@@ -26,9 +26,8 @@ const getOrderById = async (req, res, next) => {
 };
 
 const postOrder = async (req, res, next) => {
-  //const customerId = res.locals.user;
-  //console.log(customerId);
-  const result = await addOrder(req.body /*, customerId*/);
+  console.log(res.locals.user);
+  const result = await addOrder(req.body, res.locals.user);
   console.log('result', result);
   if (result.error) {
     return next(new Error(result.error));
@@ -38,7 +37,7 @@ const postOrder = async (req, res, next) => {
 };
 
 const deleteOrder = async (req, res, next) => {
-  const result = await removeOrder(Number(req.params.id));
+  const result = await removeOrder(Number(req.params.id), res.locals.user);
   if (result.error) {
     return next(new Error(result.error));
   } else {
@@ -47,7 +46,11 @@ const deleteOrder = async (req, res, next) => {
 };
 
 const putOrder = async (req, res, next) => {
-  const result = await modifyOrder(Number(req.params.id), req.body);
+  const result = await modifyOrder(
+    Number(req.params.id),
+    req.body,
+    res.locals.user
+  );
   if (result.error) {
     return next(new Error(result.error));
   } else {

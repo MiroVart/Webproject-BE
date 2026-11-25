@@ -50,10 +50,21 @@ const addUser = async (user) => {
   return {user_id: result.insertId};
 };
 
-const modifyUser = async (id, user) => {
+const modifyUser = async (id, user, loggedUser) => {
+  let userData;
+  let userId;
+  if (loggedUser.role === 'admin') {
+    userData = user;
+    userId = id;
+  } else if (loggedUser.role === 'user') {
+    userData = loggedUser;
+    userId = loggedUser.user_id;
+  } else {
+    return false;
+  }
   const sql = promisePool.format(`UPDATE wsk_users SET ? WHERE user_id = ?`, [
-    user,
-    id,
+    userData,
+    userId,
   ]);
   const rows = await promisePool.execute(sql);
   console.log('rows', rows);
@@ -63,10 +74,18 @@ const modifyUser = async (id, user) => {
   return true;
 };
 
-const removeUser = async (id) => {
+const removeUser = async (id, loggedUser) => {
+  let userId;
+  if (loggedUser.role === 'admin') {
+    userId = id;
+  } else if (loggedUser.role === 'user') {
+    userId = loggedUser.user_id;
+  } else {
+    return false;
+  }
   const [rows] = await promisePool.execute(
     'DELETE FROM wsk_users WHERE user_id = ?',
-    [id]
+    [userId]
   );
   console.log('rows', rows);
   if (rows.affectedRows === 0) {

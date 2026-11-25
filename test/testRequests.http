@@ -6,7 +6,7 @@
 GET {{apiUrl}}/users
 
 ### Get user by id
-GET {{apiUrl}}/users/2
+GET {{apiUrl}}/users/4
 
 ### Login user
 # @name login
@@ -27,37 +27,35 @@ POST {{apiUrl}}/users
 Content-Type: application/json
 
 {
-    "name": "testuser",
-    "username": "test",
-    "email": "testemail.com",
-    "password": "testpswrd",
-    "role": 0,
-    "bonuscard_uses": "moi"
+    "name": "walde",
+    "username": "waldemart22",
+    "email": "walde@email.com",
+    "password": "pswrd123",
+    "role": "admin",
+    "bonuscard_uses": 0
 }
 
 ### Edit user
-PUT {{apiUrl}}/users/6
+PUT {{apiUrl}}/users/4
 Content-Type: application/json
 Authorization: Bearer {{login.response.body.token}}
 
 {
-    "name": "walt",
+    "name": "waltteri",
     "username": "walde22",
-    "email": "walde@email.com",
-    "password": "pswrd12345",
-    "role": 3,
-    "bonuscard_uses": 0
+    "email": "waltteri@email.com",
+    "password": "testpswrd12345"
 }
 
 ### Delete user
-DELETE {{apiUrl}}/users/6
+DELETE {{apiUrl}}/users/4
 Authorization: Bearer {{login.response.body.token}}
 
 ### Get dishes
 GET {{apiUrl}}/dishes
 
 ### Get dish by id
-GET {{apiUrl}}/dishes/3
+GET {{apiUrl}}/dishes/14
 
 ### Post new dish
 POST {{apiUrl}}/dishes
@@ -70,13 +68,13 @@ Authorization: Bearer {{login.response.body.token}}
     "type": "main",
     "weekday": "wed",
     "price": 6.99,
-    "calories": "Moi",
+    "calories": 500,
     "carbs": 50,
     "fat": 10,
-    "saturated_fat": "hei",
+    "saturated_fat": 10,
     "protein": 10,
     "fiber": 10,
-    "allergens_en": 0,
+    "allergens_en": "",
     "allergens_fi": "",
     "description_en": "",
     "description_fi": "",
@@ -84,18 +82,18 @@ Authorization: Bearer {{login.response.body.token}}
 }
 
 ### Edit dish
-PUT {{apiUrl}}/dishes/10
+PUT {{apiUrl}}/dishes/14
 Content-Type: application/json
 Authorization: Bearer {{login.response.body.token}}
 
 {
     "dish_name_en": "Porkchop with potatoes",
     "dish_name_fi": "Porsaankyljys perunoilla",
-    "type": 0,
+    "type": "main",
     "weekday": "fri",
     "price": 6.99,
     "calories": 500,
-    "carbs": "moikka",
+    "carbs": 50,
     "fat": 10,
     "saturated_fat": 10,
     "protein": 10,
@@ -104,7 +102,7 @@ Authorization: Bearer {{login.response.body.token}}
 }
 
 ### Delete dish
-DELETE {{apiUrl}}/dishes/13
+DELETE {{apiUrl}}/dishes/14
 Authorization: Bearer {{login.response.body.token}}
 
 ### Get orders
@@ -118,7 +116,6 @@ POST {{apiUrl}}/orders
 Content-Type: application/json
 
 {
-  "customer_id": 4,
   "order_date": "2026-11-23",
   "dish_1": 1,
   "dish_1_amount": 2,
@@ -127,14 +124,14 @@ Content-Type: application/json
   "dish_3": 0,
   "dish_3_amount": 0,
   "dish_4": 0,
-  "dish_4_amount": "moi",
+  "dish_4_amount": 0,
   "dish_5": 0,
   "dish_5_amount": 0,
   "dish_6": 0,
   "dish_6_amount": 0,
   "dish_7": 0,
   "dish_7_amount": 0,
-  "dish_8": "heippa",
+  "dish_8": 0,
   "dish_8_amount": 0,
   "dish_9": 0,
   "dish_9_amount": 0,
