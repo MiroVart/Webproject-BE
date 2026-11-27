@@ -15,103 +15,75 @@ const findOrderById = async (id) => {
   if (rows.length === 0) {
     return false;
   }
-  return rows[0];
+  return rows;
 };
 
-const addOrder = async (order /*, customer_id*/) => {
-  const {
-    //Väliaikainen ratkaisu id:n sijoitukselle
-    customer_id,
-    order_date,
-    dish_1,
-    dish_1_amount,
-    dish_2,
-    dish_2_amount,
-    dish_3,
-    dish_3_amount,
-    dish_4,
-    dish_4_amount,
-    dish_5,
-    dish_5_amount,
-    dish_6,
-    dish_6_amount,
-    dish_7,
-    dish_7_amount,
-    dish_8,
-    dish_8_amount,
-    dish_9,
-    dish_9_amount,
-    dish_10,
-    dish_10_amount,
-    price,
-    finished,
-    pickedup,
-  } = order;
-  const sql = `INSERT INTO wsk_orders (customer_id, order_date,
-    dish_1,
-    dish_1_amount,
-    dish_2,
-    dish_2_amount,
-    dish_3,
-    dish_3_amount,
-    dish_4,
-    dish_4_amount,
-    dish_5,
-    dish_5_amount,
-    dish_6,
-    dish_6_amount,
-    dish_7,
-    dish_7_amount,
-    dish_8,
-    dish_8_amount,
-    dish_9,
-    dish_9_amount,
-    dish_10,
-    dish_10_amount,
-    price,
-    finished,
-    pickedup)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-  const params = [
-    customer_id,
-    order_date ?? new Date(),
-    dish_1,
-    dish_1_amount ?? 1,
-    dish_2 ?? null,
-    dish_2_amount ?? 0,
-    dish_3 ?? null,
-    dish_3_amount ?? 0,
-    dish_4 ?? null,
-    dish_4_amount ?? 0,
-    dish_5 ?? null,
-    dish_5_amount ?? 0,
-    dish_6 ?? null,
-    dish_6_amount ?? 0,
-    dish_7 ?? null,
-    dish_7_amount ?? 0,
-    dish_8 ?? null,
-    dish_8_amount ?? 0,
-    dish_9 ?? null,
-    dish_9_amount ?? 0,
-    dish_10 ?? null,
-    dish_10_amount ?? 0,
-    price ?? 0,
-    finished ?? 0,
-    pickedup ?? 0,
-  ];
-  const [result] = await promisePool.execute(sql, params);
-  console.log('insert query result', result);
-  if (result.affectedRows === 0) {
+const findOrderByUserId = async (userId) => {
+  const [rows] = await promisePool.execute(
+    'SELECT * FROM wsk_orders WHERE customer_id = ?',
+    [userId]
+  );
+  console.log('rows', rows);
+  if (rows.length === 0) {
     return false;
   }
-  return {order_id: result.insertId /*customer_id: customer*/};
+  return rows;
 };
 
-const modifyOrder = async (id, order) => {
-  const sql = promisePool.format(`UPDATE wsk_orders SET ? WHERE order_id = ?`, [
-    order,
-    id,
-  ]);
+const addOrder = async (orders, customer) => {
+  const [maxRows] = await promisePool.execute(
+    'SELECT COALESCE(MAX(order_id), 0) + 1 AS nextOrderId FROM wsk_orders FOR UPDATE'
+  );
+  console.log(customer.user_id);
+  //console.log(maxRows);
+  const nextOrderId = maxRows[0].nextOrderId;
+  //console.log(nextOrderId);
+  const order_date = orders.order_date ?? new Date();
+  //console.log(order_date);
+  const finished = orders.finished ?? 0;
+  //console.log(finished);
+  const pickedup = orders.pickedup ?? 0;
+  //console.log(pickedup);
+  const items = Array.isArray(orders.items) ? orders.items : [orders];
+  console.log(items);
+  const sql = `INSERT INTO wsk_orders (order_id, customer_id, order_date,
+    dishes_id,
+    dish_amount,
+    finished,
+    pickedup)
+               VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  for (let item of items) {
+    const params = [
+      nextOrderId,
+      customer.user_id,
+      order_date ?? new Date(),
+      item.dishes_id,
+      item.dish_amount ?? 1,
+      finished ?? 0,
+      pickedup ?? 0,
+    ];
+    const [result] = await promisePool.execute(sql, params);
+    console.log('insert query result', result);
+    if (result.affectedRows === 0) {
+      return false;
+    }
+  }
+  return {order_id: nextOrderId, customer_id: customer.user_id};
+};
+
+const modifyOrder = async (id, order, loggedUser) => {
+  let mainSql = 'UPDATE wsk_orders SET ? WHERE ';
+  let params;
+  if (loggedUser.role === 'admin') {
+    mainSql += `id = ?`;
+    params = [order, id];
+  } else if (loggedUser.role === 'user') {
+    mainSql += `id = ? AND customer_id = ?`;
+    params = [order, id, loggedUser.user_id];
+  } else {
+    return false;
+  }
+  const sql = promisePool.format(mainSql, params);
   const rows = await promisePool.execute(sql);
   console.log('rows', rows);
   if (rows[0].affectedRows === 0) {
@@ -120,11 +92,19 @@ const modifyOrder = async (id, order) => {
   return true;
 };
 
-const removeOrder = async (id) => {
-  const [rows] = await promisePool.execute(
-    'DELETE FROM wsk_orders WHERE order_id = ?',
-    [id]
-  );
+const removeOrder = async (id, loggedUser) => {
+  let mainSql = 'DELETE FROM wsk_orders WHERE ';
+  let params;
+  if (loggedUser.role === 'admin') {
+    mainSql += `id = ?`;
+    params = [id];
+  } else if (loggedUser.role === 'user') {
+    mainSql += `id = ? AND customer_id = ?`;
+    params = [id, loggedUser.user_id];
+  } else {
+    return false;
+  }
+  const [rows] = await promisePool.execute(mainSql, params);
   console.log('rows', rows);
   if (rows.affectedRows === 0) {
     return false;
@@ -132,4 +112,11 @@ const removeOrder = async (id) => {
   return true;
 };
 
-export {listAllOrders, findOrderById, addOrder, modifyOrder, removeOrder};
+export {
+  listAllOrders,
+  findOrderById,
+  findOrderByUserId,
+  addOrder,
+  modifyOrder,
+  removeOrder,
+};

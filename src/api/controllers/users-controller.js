@@ -39,7 +39,8 @@ const postUser = async (req, res, next) => {
 };
 
 const deleteUser = async (req, res, next) => {
-  const result = await removeUser(Number(req.params.id));
+  console.log(res.locals.user);
+  const result = await removeUser(Number(req.params.id), res.locals.user);
   if (result.error) {
     return next(new Error(result.error));
   } else {
@@ -48,9 +49,14 @@ const deleteUser = async (req, res, next) => {
 };
 
 const putUser = async (req, res, next) => {
+  console.log(res.locals.user);
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
   req.body.password = hashedPassword;
-  const result = await modifyUser(Number(req.params.id), req.body);
+  const result = await modifyUser(
+    Number(req.params.id),
+    req.body,
+    res.locals.user
+  );
   if (result.error) {
     return next(new Error(result.error));
   } else {

@@ -18,20 +18,27 @@ userRouter
   .post(
     body('name')
       .isAlphanumeric()
+      .withMessage('Name must be alphanumeric value')
       .isLength({min: 3, max: 50})
       .withMessage('Name must be min 3 and max 50 characters long'),
     body('username')
       .isAlphanumeric()
+      .withMessage('Username must be alphanumeric value')
       .isLength({min: 3, max: 30})
       .withMessage('Username must be min 3 and max 30 characters long'),
     body('email')
       .trim()
-      .isEmail('Email must be in a format (name@something.som)'),
+      .isEmail()
+      .withMessage('Email must be in a format (name@something.som)'),
     body('password')
       .isLength({min: 8, max: 20})
       .withMessage('Password must be min 8 and max 20 characters long'),
-    body('role').isAlpha().withMessage('Role must be in alphabet format'),
+    body('role')
+      .optional()
+      .isAlpha()
+      .withMessage('Role must be in alphabet format'),
     body('bonuscard_uses')
+      .optional()
       .isNumeric()
       .withMessage('Bonus card uses must be a numeric value'),
     validationErrors,
@@ -45,20 +52,27 @@ userRouter
     authenticateToken,
     body('name')
       .isAlphanumeric()
+      .withMessage('Name must be alphanumeric value')
       .isLength({min: 3, max: 50})
       .withMessage('Name must be min 3 and max 50 characters long'),
     body('username')
       .isAlphanumeric()
+      .withMessage('Username must be alphanumeric value')
       .isLength({min: 3, max: 30})
       .withMessage('Username must be min 3 and max 30 characters long'),
     body('email')
       .trim()
-      .isEmail('Email must be in a format (name@something.som)'),
+      .isEmail()
+      .withMessage('Email must be in a format (name@something.som)'),
     body('password')
       .isLength({min: 8, max: 20})
       .withMessage('Password must be min 8 and max 20 characters long'),
-    body('role').isAlpha().withMessage('Role must be in alphabet format'),
+    body('role')
+      .optional()
+      .isAlpha()
+      .withMessage('Role must be in alphabet format'),
     body('bonuscard_uses')
+      .optional()
       .isNumeric()
       .withMessage('Bonus card uses must be a numeric value'),
     validationErrors,

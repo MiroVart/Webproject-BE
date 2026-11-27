@@ -26,7 +26,10 @@ const getDishById = async (req, res, next) => {
 };
 
 const postDish = async (req, res, next) => {
-  const result = await addDish(req.body);
+  console.log(req.body);
+  console.log(req.file);
+  req.body.filename = req.file.filename;
+  const result = await addDish(req.body, res.locals.user);
   console.log('result', result);
   if (result.error) {
     return next(new Error(result.error));
@@ -36,7 +39,7 @@ const postDish = async (req, res, next) => {
 };
 
 const deleteDish = async (req, res, next) => {
-  const result = await removeDish(Number(req.params.id));
+  const result = await removeDish(Number(req.params.id), res.locals.user);
   if (result.error) {
     return next(new Error(result.error));
   } else {
@@ -45,7 +48,11 @@ const deleteDish = async (req, res, next) => {
 };
 
 const putDish = async (req, res, next) => {
-  const result = await modifyDish(Number(req.params.id), req.body);
+  const result = await modifyDish(
+    Number(req.params.id),
+    req.body,
+    res.locals.user
+  );
   if (result.error) {
     return next(new Error(result.error));
   } else {

@@ -19,7 +19,8 @@ CREATE TABLE `wsk_dishes` (
   `allergens_fi` text DEFAULT '-',
   `description_en` text DEFAULT '-',
   `description_fi` text DEFAULT '-',
-  `filename` text NOT NULL
+  `filename` text NOT NULL,
+  `available` boolean DEFAULT TRUE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 INSERT INTO `wsk_dishes` (`dish_id`, `dish_name_en`, `dish_name_fi`, `type`, `weekday`, `price`, `calories`, `carbs`, `fat`, `saturated_fat`, `protein`, `fiber`, `allergens_en`, `allergens_fi`, `filename`) VALUES
@@ -46,38 +47,23 @@ INSERT INTO `wsk_users` (`user_id`, `name`, `username`, `email`, `password`, `ro
 (3, 'Test User', 'john', 'john@metropolia.fi', '$2a$10$5RzpyimIeuzNqW7G8seBiOzBiWBvrSWroDomxMa0HzU6K2ddSgixS', 'user', 0);
 
 CREATE TABLE `wsk_orders` (
+  `id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
   `order_date` datetime DEFAULT NOW(),
-  `dish_1` int(11) NOT NULL,
-  `dish_1_amount` int(11) DEFAULT 1,
-  `dish_2` int(11),
-  `dish_2_amount` int(11) DEFAULT 0,
-  `dish_3` int(11),
-  `dish_3_amount` int(11) DEFAULT 0,
-  `dish_4` int(11),
-  `dish_4_amount` int(11) DEFAULT 0,
-  `dish_5` int(11),
-  `dish_5_amount` int(11) DEFAULT 0,
-  `dish_6` int(11),
-  `dish_6_amount` int(11) DEFAULT 0,
-  `dish_7` int(11),
-  `dish_7_amount` int(11) DEFAULT 0,
-  `dish_8` int(11),
-  `dish_8_amount` int(11) DEFAULT 0,
-  `dish_9` int(11),
-  `dish_9_amount` int(11) DEFAULT 0,
-  `dish_10` int(11),
-  `dish_10_amount` int(11) DEFAULT 0,
-  `price` float NOT NULL DEFAULT 0,
+  `dishes_id` int(11) NOT NULL,
+  `dish_amount` int(11) DEFAULT 1,
   `finished` boolean DEFAULT false,
   `pickedup` boolean DEFAULT false
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
-INSERT INTO `wsk_orders` (`order_id`, `customer_id`, `dish_1`, `dish_1_amount`, `price`, `finished`, `pickedup`) VALUES
-(1, 1, 2, 10, 49.50, FALSE, FALSE),
-(2, 2, 1, 2, 9.90, TRUE, FALSE),
-(3, 3, 2, 10, 49.50, FALSE, FALSE);
+INSERT INTO `wsk_orders` (`id`, `order_id`, `customer_id`, `dishes_id`, `dish_amount`, `finished`, `pickedup`) VALUES
+(1, 1, 3, 1, 10, TRUE, FALSE),
+(2, 1, 3, 3, 10, TRUE, FALSE),
+(3, 1, 3, 5, 10, TRUE, FALSE),
+(4, 2, 2, 2, 5, TRUE, TRUE),
+(5, 2, 2, 4, 5, TRUE, TRUE),
+(6, 2, 2, 6, 5, TRUE, TRUE);
 
 ALTER TABLE `wsk_dishes`
   ADD PRIMARY KEY (`dish_id`);
@@ -87,7 +73,7 @@ ALTER TABLE `wsk_users`
   ADD PRIMARY KEY (`user_id`);
 
 ALTER TABLE `wsk_orders`
-  ADD PRIMARY KEY (`order_id`);
+  ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `wsk_dishes`
   MODIFY `dish_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
@@ -96,10 +82,11 @@ ALTER TABLE `wsk_users`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 ALTER TABLE `wsk_orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 ALTER TABLE `wsk_orders`
-  ADD CONSTRAINT `fk_user_id_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `wsk_users` (`user_id`);
+  ADD CONSTRAINT `fk_user_id_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `wsk_users` (`user_id`),
+  ADD CONSTRAINT `fk_dish_id_dishes_id` FOREIGN KEY (`dishes_id`) REFERENCES `wsk_dishes` (`dish_id`);
 
 DROP USER IF EXISTS 'restaurantuser'@'localhost';
 CREATE USER 'restaurantuser'@'localhost' IDENTIFIED BY 'password';
