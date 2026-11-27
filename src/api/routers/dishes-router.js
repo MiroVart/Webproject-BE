@@ -9,6 +9,7 @@ import {
 import {authenticateToken} from '../../middlewares/authentication.js';
 import {validationErrors} from '../../middlewares/errorHandler.js';
 import {body} from 'express-validator';
+import {upload, createThumbnail} from '../../middlewares/upload.js';
 
 const dishesRouter = express.Router();
 
@@ -17,6 +18,8 @@ dishesRouter
   .get(getAllDishes)
   .post(
     authenticateToken,
+    upload.single('picture'),
+    createThumbnail,
     body('dish_name_en')
       .isLength({min: 5, max: 100})
       .withMessage('Dish name (en) must be min 5 and max 100 characters long'),
@@ -83,6 +86,10 @@ dishesRouter
       .isLength({max: 200})
       .withMessage('Description (fi) must be max 100 characters long'),
     body('filename'),
+    body('available')
+      .optional()
+      .isBoolean()
+      .withMessage('Available must be a boolean value'),
     validationErrors,
     postDish
   );
@@ -158,6 +165,10 @@ dishesRouter
       .isLength({max: 200})
       .withMessage('Description (fi) must be max 100 characters long'),
     body('filename'),
+    body('available')
+      .optional()
+      .isBoolean()
+      .withMessage('Available must be a boolean value'),
     validationErrors,
     putDish
   );

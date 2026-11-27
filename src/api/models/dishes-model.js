@@ -37,9 +37,10 @@ const addDish = async (dish, loggedUser) => {
       description_en,
       description_fi,
       filename,
+      available,
     } = dish;
-    const sql = `INSERT INTO wsk_dishes (dish_name_en, dish_name_fi, type, weekday, price, calories, carbs, fat, saturated_fat, protein, fiber, allergens_en, allergens_fi, description_en, description_fi, filename)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const sql = `INSERT INTO wsk_dishes (dish_name_en, dish_name_fi, type, weekday, price, calories, carbs, fat, saturated_fat, protein, fiber, allergens_en, allergens_fi, description_en, description_fi, filename, available)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     const params = [
       dish_name_en,
       dish_name_fi,
@@ -56,7 +57,8 @@ const addDish = async (dish, loggedUser) => {
       allergens_fi ?? '-',
       description_en ?? '-',
       description_fi ?? '-',
-      filename ?? 'image placeholder',
+      filename ?? 'img-placeholder',
+      available ?? true,
     ];
     const [result] = await promisePool.execute(sql, params);
     console.log('insert query result', result);

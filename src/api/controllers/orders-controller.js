@@ -1,6 +1,7 @@
 import {
   listAllOrders,
   findOrderById,
+  findOrderByUserId,
   addOrder,
   modifyOrder,
   removeOrder,
@@ -25,8 +26,18 @@ const getOrderById = async (req, res, next) => {
   }
 };
 
+const getOrderByUserId = async (req, res, next) => {
+  const order = await findOrderByUserId(res.locals.user.user_id);
+  if (order.error) {
+    return next(new Error(order.error));
+  } else {
+    res.status(200).json(order);
+  }
+};
+
 const postOrder = async (req, res, next) => {
   console.log(res.locals.user);
+  console.log(req.body);
   const result = await addOrder(req.body, res.locals.user);
   console.log('result', result);
   if (result.error) {
@@ -37,6 +48,7 @@ const postOrder = async (req, res, next) => {
 };
 
 const deleteOrder = async (req, res, next) => {
+  console.log(res.locals.user);
   const result = await removeOrder(Number(req.params.id), res.locals.user);
   if (result.error) {
     return next(new Error(result.error));
@@ -46,6 +58,7 @@ const deleteOrder = async (req, res, next) => {
 };
 
 const putOrder = async (req, res, next) => {
+  console.log(res.locals.user);
   const result = await modifyOrder(
     Number(req.params.id),
     req.body,
@@ -58,4 +71,11 @@ const putOrder = async (req, res, next) => {
   }
 };
 
-export {getAllOrders, getOrderById, postOrder, deleteOrder, putOrder};
+export {
+  getAllOrders,
+  getOrderById,
+  getOrderByUserId,
+  postOrder,
+  deleteOrder,
+  putOrder,
+};

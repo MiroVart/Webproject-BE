@@ -78,8 +78,45 @@ Authorization: Bearer {{login.response.body.token}}
     "allergens_fi": "",
     "description_en": "",
     "description_fi": "",
-    "filename": ""
+    "filename": "",
+    "available": true
 }
+
+### post dish WITH IMAGE
+POST {{apiUrl}}/dishes HTTP/1.1
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: multipart/form-data; boundary=MyBoundary
+
+--MyBoundary
+Content-Disposition: form-data; name="dish_name_en"
+
+Porkchop with potatoes
+--MyBoundary
+Content-Disposition: form-data; name="dish_name_fi"
+
+Porsaankyljys perunoilla
+--MyBoundary
+Content-Disposition: form-data; name="type"
+
+main
+--MyBoundary
+Content-Disposition: form-data; name="weekday"
+
+mon
+--MyBoundary
+Content-Disposition: form-data; name="price"
+
+6.99
+--MyBoundary
+Content-Disposition: form-data; name="filename"
+
+img-placeholder
+--MyBoundary
+Content-Disposition: form-data; name="picture"; filename="IMG_20240825_145643.jpg"
+Content-Type: image/jpeg
+
+< ./IMG_20240825_145643.jpg
+--MyBoundary--
 
 ### Edit dish
 PUT {{apiUrl}}/dishes/14
@@ -102,65 +139,43 @@ Authorization: Bearer {{login.response.body.token}}
 }
 
 ### Delete dish
-DELETE {{apiUrl}}/dishes/14
+DELETE {{apiUrl}}/dishes/10
 Authorization: Bearer {{login.response.body.token}}
 
 ### Get orders
 GET {{apiUrl}}/orders
 
 ### Get order by id
-GET {{apiUrl}}/orders/2
+GET {{apiUrl}}/orders/4
+
+### Get order by user id
+GET {{apiUrl}}/orders/user/4
+Authorization: Bearer {{login.response.body.token}}
 
 ### Post new order
 POST {{apiUrl}}/orders
 Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
 
 {
-  "order_date": "2026-11-23",
-  "dish_1": 1,
-  "dish_1_amount": 2,
-  "dish_2": 2,
-  "dish_2_amount": 3,
-  "dish_3": 0,
-  "dish_3_amount": 0,
-  "dish_4": 0,
-  "dish_4_amount": 0,
-  "dish_5": 0,
-  "dish_5_amount": 0,
-  "dish_6": 0,
-  "dish_6_amount": 0,
-  "dish_7": 0,
-  "dish_7_amount": 0,
-  "dish_8": 0,
-  "dish_8_amount": 0,
-  "dish_9": 0,
-  "dish_9_amount": 0,
-  "dish_10": 0,
-  "dish_10_amount": 0,
-  "price": 18.99,
-  "finished": 1,
-  "pickedup": 0
+    "items": [
+        {"dishes_id": 2, "dish_amount": 3},
+        {"dishes_id": 3, "dish_amount": 2},
+        {"dishes_id": 4, "dish_amount": 1}
+    ]
 }
 
 ### Modify order
-PUT {{apiUrl}}/orders/4
+PUT {{apiUrl}}/orders/11
 Content-Type: application/json
 Authorization: Bearer {{login.response.body.token}}
 
 {
-  "customer_id": 4,
-  "order_date": "",
-  "dish_1": 1,
-  "dish_1_amount": "hei",
-  "dish_2": 2,
-  "dish_2_amount": 3,
-  "dish_3": 3,
-  "dish_3_amount": 1,
-  "price": "moi",
+  "dish_amount": 2,
   "finished": 1,
   "pickedup": 1
 }
 
 ### Delete order
-DELETE {{apiUrl}}/orders/4
+DELETE {{apiUrl}}/orders/11
 Authorization: Bearer {{login.response.body.token}}

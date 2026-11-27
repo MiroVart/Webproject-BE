@@ -26,6 +26,9 @@ const getDishById = async (req, res, next) => {
 };
 
 const postDish = async (req, res, next) => {
+  console.log(req.body);
+  console.log(req.file);
+  req.body.filename = req.file.filename;
   const result = await addDish(req.body, res.locals.user);
   console.log('result', result);
   if (result.error) {
